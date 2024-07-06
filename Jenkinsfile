@@ -3,12 +3,6 @@ pipeline {
     
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose-deploy.yml'
-        MYSQL_ROOT_PASSWORD="${env.MYSQL_ROOT_PASSWORD}"
-        MYSQL_DATABASE="${env.MYSQL_DATABASE}"
-        MYSQL_USER="${env.MYSQL_USER}"
-        MYSQL_PASSWORD="${env.MYSQL_PASSWORD}"
-        NODE_ENV="${env.NODE_ENV}"
-        TZ="${env.TZ}"
         DEPLOY_SERVER="jenkinstest@34.69.206.54"
     }
 
@@ -37,7 +31,7 @@ pipeline {
             }
             steps {
                 script {
-                    sshagent(['deploy-ssh']) {
+                    sshagent(['deploy-server-access']) {
                         sh """
                         scp -o StrictHostKeyChecking=no ${DOCKER_COMPOSE_FILE} ${DEPLOY_SERVER}:~/${DOCKER_COMPOSE_FILE}
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
@@ -55,9 +49,11 @@ pipeline {
     post {
         success {
             echo 'Build and deployment successful!'
+            slackSend message: "Service deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
         failure {
             echo 'Build or deployment failed.'
+            slackSend failOnError: true, message: "Build failed  - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
         }
     }
 }
