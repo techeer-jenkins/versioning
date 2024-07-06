@@ -11,11 +11,11 @@ services:
       - app-network
 
   frontend:
-    image: ryanleetecheer/frontend-test:1.0.1
+    image: ryanleetecheer/frontend-test:1.0.2
     container_name: front
     ports:
       - "3000:3000"
-    command: yarn dev
+    command: yarn dev --host
     restart: always
 
 networks:
