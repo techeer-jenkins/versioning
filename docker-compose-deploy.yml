@@ -14,7 +14,7 @@ services:
     image: ryanleetecheer/frontend-test:1.0.2
     container_name: front
     ports:
-      - "3000:3000"
+      - "5173:5173"
     command: yarn dev --host
     restart: always
 
