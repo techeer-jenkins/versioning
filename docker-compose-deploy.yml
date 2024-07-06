@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ryanleetecheer/backend-test:1.0.5
+    container_name: backend
+    restart: always
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  frontend:
+    image: ryanleetecheer/frontend-test:1.0.1
+    container_name: front
+    ports:
+      - "3000:3000"
+    command: yarn dev
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
