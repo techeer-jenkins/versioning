@@ -24,6 +24,30 @@ services:
     networks:
       - app-network
   
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.8.1
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+  
+  cadvisor-example:
+    image: google/cadvisor:v0.35.0
+    container_name: cadvisor-example
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - app-network
+  
   grafana-example:
     image: grafana/grafana:9.5.20
     container_name: grafana-example
