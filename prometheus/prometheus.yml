@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  - job_name: 'prometheus-data'
+    static_configs:
+      - targets: ['prometheus-example:9090']
+  - job_name: 'backend-data'
+    static_configs:
+      - targets: ['backend:8000']
+  # - job_name: 'frontend-data'
+  #   static_configs:
+  #     - targets: ['frontend:5173']
