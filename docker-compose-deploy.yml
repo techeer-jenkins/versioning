@@ -1,17 +1,28 @@
 version: '3.8'
 
 services:
-  # prometheus-example:
-  #   image: prom/prometheus:v2.45.6
-  #   container_name: prometheus-example
-  #   ports:
-  #     - "9090:9090"
-  #   volumes:
-  #     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #   networks:
-  #     - app-network
+  prometheus-example:
+    image: prom/prometheus:v2.45.6
+    container_name: prometheus-example
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - app-network
+  
+  grafana-example:
+    image: grafana/grafana:9.5.20
+    container_name: grafana-example
+    volumes:
+      - ./grafana:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
 
   backend:
     image: ryanleetecheer/backend-test:1.0.5
