@@ -17,7 +17,7 @@ services:
     container_name: nginx-exporter
     ports:
       - "9113:9113"
-    command: -nginx.scrape-uri=http://nginx-example:80/metrics
+    command: -nginx.scrape-uri=http://nginx-example:80/status
     networks:
       - app-network
     
