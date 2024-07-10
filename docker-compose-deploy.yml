@@ -40,19 +40,21 @@ services:
   node_exporter:
     image: quay.io/prometheus/node-exporter:v1.8.1
     container_name: node_exporter
+    ports:
+      - "9100:9100"
     command:
       - '--path.rootfs=/host'
-    network_mode: host
-    pid: host
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
+    networks:
+      - app-network 
 
   cadvisor-example:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor-example
     ports:
-      - "8081:8080"
+      - "8080:8080"
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -67,6 +69,7 @@ services:
     volumes:
       - ./grafana:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/data:/var/lib/grafana
     ports:
       - "3000:3000"
     networks:
