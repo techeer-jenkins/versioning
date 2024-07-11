@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'todo_django.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_prometheus.db.backend.mysql',
+        'ENGINE': 'django_prometheus.db.backends.mysql',
         'NAME': 'session_db',
         'USER': 'session_example',
         'PASSWORD': 'session_example',
