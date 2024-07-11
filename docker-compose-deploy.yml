@@ -75,14 +75,41 @@ services:
     networks:
       - app-network
 
-  backend:
-    image: ryanleetecheer/backend-test:1.0.5
-    container_name: backend
+  fastapi:
+    image: ryanleetecheer/backend-test:1.0.8
+    container_name: fastapi
     restart: always
     ports:
       - '8000:8000'
     networks:
       - app-network
+  
+  express:
+    container_name: express
+    build: 
+      context: ./node-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '3001:3001'
+    networks:
+      - app-network
+    depends_on:
+      - db
+  
+  django:
+    container_name: django
+    build: 
+      context: ./django-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '8002:8002'
+    networks:
+      - app-network
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
+    depends_on:
+      - db
 
   frontend:
     image: ryanleetecheer/frontend-test:1.0.2
@@ -93,7 +120,64 @@ services:
     restart: always
     networks:
       - app-network
+  
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: session_db
+      MYSQL_USER: session_example
+      MYSQL_PASSWORD: session_example
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+  
+  mysql-exporter:
+    image: prom/mysqld-exporter:main
+    container_name: mysql-exporter
+    ports:
+      - "9104:9104"
+    volumes:
+      - ./mysql-exporter/my-config.conf:/cfg/my-config.conf
+    environment:
+      - DATA_SOURCE_NAME='root:root@(db:3306)/session_db'
+      - collect.info_schema.tablestats=true
+      - collect.info_schema.userstats=true
+      - collect.info_schema.query_response_time=true
+      - collect.auto_increment.columns=true
+      - collect.binlog_size=true
+      - collect.perf_schema.eventsstatements=true
+      - collect.perf_schema.eventswaits=true
+      - collect.perf_schema.file_events=true
+      - collect.perf_schema.indexiowaits=true
+      - collect.perf_schema.tableiowaits=true
+      - collect.perf_schema.tablelocks=true
+    networks:
+      - app-network
+    depends_on:
+      - db
+    command:
+      - '--config.my-cnf=/cfg/my-config.conf'
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:mysql
+    ports:
+      - "8001:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - app-network
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  db_data:

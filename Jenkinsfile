@@ -38,7 +38,7 @@ pipeline {
                         cd ~ &&
                         ls -al &&
                         docker compose -f ${DOCKER_COMPOSE_FILE} pull &&
-                        docker compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                        docker compose -f ${DOCKER_COMPOSE_FILE} up --build -d'
                         """
                     }
                 }
