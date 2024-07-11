@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'todo',
     'django_prometheus',
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq-example//'
+
+CELERY_RESULT_BACKEND = 'redis://redis-example:6379/0'

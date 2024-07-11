@@ -111,6 +111,57 @@ services:
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
     depends_on:
       - db
+  
+  celery-worker:
+    container_name: celery
+    build: 
+      context: ./django-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '5555:5555'
+    networks:
+      - app-network
+    depends_on:
+      - rabbitmq-example
+      - redis-example
+    command: sh -c "sh start_celery_flower.sh"
+  
+  rabbitmq-example:
+    container_name: rabbitmq-example
+    build: 
+      context: ./rabbitmq-exporter
+      dockerfile: Dockerfile
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "15692:15692"
+    networks:
+      - app-network
+    restart: always
+    tty: true
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  redis-example:
+    image: redis:latest
+    container_name: redis-example
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    restart: always
+  
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis_exporter
+    environment:
+      - REDIS_ADDR=redis:6379
+    ports:
+      - "9121:9121"
+    networks:
+      - app-network
 
   frontend:
     image: ryanleetecheer/frontend-test:1.0.2
@@ -164,6 +215,7 @@ services:
       - db
     command:
       - '--config.my-cnf=/cfg/my-config.conf'
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
