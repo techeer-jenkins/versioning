@@ -157,7 +157,7 @@ services:
     image: oliver006/redis_exporter:latest
     container_name: redis_exporter
     environment:
-      - REDIS_ADDR=redis:6379
+      - REDIS_ADDR=redis-example:6379
     ports:
       - "9121:9121"
     networks:

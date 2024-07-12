@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { register, httpRequestDurationMicroseconds, requestCount } = require('./metrics');
-const routes = require('./routes');
+const router = require('./routes');
 const { sequelize } = require('./models');
 
 const app = express();
@@ -29,7 +29,7 @@ app.get('/api/v2/', (req, res) => {
   res.json({ message: "Welcome to the Express Todo API" });
 });
 
-app.use('/api/v2', routes);
+app.use('/', router);
 
 app.listen(port, async () => {
   await sequelize.sync();

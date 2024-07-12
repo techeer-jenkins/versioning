@@ -5,12 +5,12 @@ const { createTodo, getTodos } = require('./controllers/todoController');
 const router = express.Router();
 
 // User Routes
-router.post('/users', createUser);
-router.get('/users', getUsers);
-router.get('/users/:userId', getUserById);
-router.post('/users/:userId/todos', createTodo);
+router.post('/api/v2/users', createUser);
+router.get('/api/v2/users', getUsers);
+router.get('/api/v2/users/:userId', getUserById);
+router.post('/api/v2/users/:userId/todos', createTodo);
 
 // Todo Routes
-router.get('/todos', getTodos);
+router.get('/api/v2/todos', getTodos);
 
 module.exports = router;

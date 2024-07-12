@@ -12,6 +12,7 @@ const createTodo = async (req, res) => {
 };
 
 const getTodos = async (req, res) => {
+  console.log("getTodos");
   const { skip = 0, limit = 100 } = req.query;
   const todos = await Todo.findAll({ offset: parseInt(skip), limit: parseInt(limit) });
   res.json(todos);
