@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose-deploy.yml'
-        DEPLOY_SERVER="jenkinstest@34.69.206.54"
+        DEPLOY_SERVER = "jenkinstest@34.69.206.54"
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     sh "docker --version"
-                    sh "docker compose --version"
+                    sh "docker-compose --version"
                 }
             }
         }
@@ -30,17 +30,14 @@ pipeline {
                     branch 'master'
                 }
             }
-        steps {
-            script {
-                sshagent(['deploy-server-access']) {
-                    ssh """
-                    scp -o StrictHostKeyChecking=no ${DEPLOY_SERVER} git clone https://github.com/techeer-jenkins/versioning.git
-                    scp -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
-                        cd versioning
-                        docker-compose -f ${DOCKER_COMPOSE_FILE} down
-                        ls -al
-                        docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'
-                    """
+            steps {
+                script {
+                    sshagent(['deploy-server-access']) {
+                        ssh "scp -o StrictHostKeyChecking=no ${DOCKER_COMPOSE_FILE} ${DEPLOY_SERVER}:~/"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/ && git clone https://github.com/techeer-jenkins/versioning.git'"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker-compose -f ${DOCKER_COMPOSE_FILE} down'"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && ls -al'"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'"
                     }
                 }
             }
@@ -54,7 +51,7 @@ pipeline {
                     disableDeferredWipeout: true,
                     notFailBuild: true,
                     patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                            [pattern: '.propsfile', type: 'EXCLUDE']])
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
         }
         success {
             echo 'Build and deployment successful!'
