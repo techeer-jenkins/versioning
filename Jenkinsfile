@@ -34,8 +34,8 @@ pipeline {
                 script {
                     sshagent(['deploy-server-access']) {
                         sh """
-                        scp -r -o StrictHostKeyChecking=no ${WORKSPACE}/ ${DEPLOY_SERVER}:~/
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        git clone https://github.com/techeer-jenkins/versioning.git
                         cd ~/versioning
                         ls -al && pwd
                         docker compose -f ${DOCKER_COMPOSE_FILE} down
