@@ -13,6 +13,9 @@ services:
       - app-network
     depends_on:
       - frontend
+      - fastapi
+      - express
+      - django
     restart: always
 
   nginx-exporter:
