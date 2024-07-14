@@ -70,6 +70,7 @@ services:
   grafana-example:
     image: grafana/grafana:9.5.20
     container_name: grafana-example
+    user: root
     volumes:
       - ./grafana:/etc/grafana/provisioning
       - ./grafana/data:/var/lib/grafana
