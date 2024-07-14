@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose-deploy.yml'
-        DEPLOY_SERVER = "jenkinstest@34.69.206.54"
+        DEPLOY_SERVER ="jenkinstest@34.69.206.54"
     }
 
     stages {
