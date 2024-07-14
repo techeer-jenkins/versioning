@@ -136,7 +136,6 @@ services:
     networks:
       - app-network
     restart: always
-    # command: sh -c "rabbitmq-plugins enable rabbitmq_management"
     tty: true
     environment:
       - RABBITMQ_DEFAULT_USER=guest
