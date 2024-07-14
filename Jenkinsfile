@@ -40,6 +40,7 @@ pipeline {
                         git pull origin main
                         ls -al && pwd
                         docker compose -f ${DOCKER_COMPOSE_FILE} down
+                        git pull origin main
                         docker compose -f ${DOCKER_COMPOSE_FILE} up -d'
                         """
                     }
