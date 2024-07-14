@@ -101,7 +101,7 @@ services:
   
   django:
     container_name: django
-    image: ryanleetecheer/backend-test:0.0.5-django
+    image: ryanleetecheer/backend-test:0.0.8-django
     restart: always
     ports:
       - '8002:8002'
@@ -113,7 +113,7 @@ services:
   
   celery-worker:
     container_name: celery-worker
-    image: ryanleetecheer/backend-test:0.0.5-django
+    image: ryanleetecheer/backend-test:0.0.8-django
     restart: always
     ports:
       - '5555:5555'
@@ -122,10 +122,13 @@ services:
     depends_on:
       - rabbitmq-example
       - redis-example
+    environment:
+      - CELERY_BROKER_API_URL=http://guest:guest@rabbitmq-example:15672/api/
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq-example:5672/
     command: sh -c "sh start_celery_flower.sh"
   
   rabbitmq-example:
-    image: rabbitmq:3.12
+    image: rabbitmq:management
     ports:
       - "15672:15672"
       - "5672:5672"
