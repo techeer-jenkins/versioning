@@ -37,8 +37,8 @@ pipeline {
                     scp -o StrictHostKeyChecking=no ${DEPLOY_SERVER} git clone https://github.com/techeer-jenkins/versioning.git
                     scp -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
                         cd versioning
+                        docker-compose -f ${DOCKER_COMPOSE_FILE} down
                         ls -al
-                        docker-compose -f ${DOCKER_COMPOSE_FILE} pull
                         docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'
                     """
                     }
