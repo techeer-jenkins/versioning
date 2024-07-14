@@ -34,7 +34,7 @@ pipeline {
                 script {
                     sshagent(['deploy-server-access']) {
                         sh """
-                        ssh "scp -r -o StrictHostKeyChecking=no ${WORKSPACE}/ ${DEPLOY_SERVER}:~/"
+                        scp -r -o StrictHostKeyChecking=no ${WORKSPACE}/ ${DEPLOY_SERVER}:~/
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
                         cd ~/versioning
                         ls -al && pwd
