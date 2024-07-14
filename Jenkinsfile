@@ -9,6 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                cleanWs()
                 git branch: 'main', url: 'https://github.com/techeer-jenkins/versioning.git'
             }
         }
@@ -38,7 +39,7 @@ pipeline {
                         cd ~ &&
                         ls -al &&
                         docker compose -f ${DOCKER_COMPOSE_FILE} pull &&
-                        docker compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                        docker compose -f ${DOCKER_COMPOSE_FILE} up --build -d'
                         """
                     }
                 }
@@ -47,6 +48,14 @@ pipeline {
     }
 
     post {
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                            [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
         success {
             echo 'Build and deployment successful!'
             slackSend message: "Service deployed successfully - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
