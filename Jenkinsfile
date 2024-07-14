@@ -33,8 +33,9 @@ pipeline {
         steps {
             script {
                 sshagent(['deploy-server-access']) {
+                    ssh """
                     ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
-                        git clone https://github.com/techeer-jenkins/versioning.git ~/my-project
+                    git clone https://github.com/techeer-jenkins/versioning.git
                     '
                     
                     // Navigate to the cloned repository and run Docker Compose commands
@@ -44,6 +45,7 @@ pipeline {
                         docker-compose -f ${DOCKER_COMPOSE_FILE} pull
                         docker-compose -f ${DOCKER_COMPOSE_FILE} up -d
                     '
+                    """
                     }
                 }
             }
