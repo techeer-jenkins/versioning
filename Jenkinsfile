@@ -33,10 +33,11 @@ pipeline {
             steps {
                 script {
                     sshagent(['deploy-server-access']) {
-                        ssh "scp -o StrictHostKeyChecking=no ${DOCKER_COMPOSE_FILE} ${DEPLOY_SERVER}:~/"
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/ && git clone https://github.com/techeer-jenkins/versioning.git'"
+                        // Copy the entire cloned repository to the deployment server
+                        ssh "scp -r -o StrictHostKeyChecking=no ${WORKSPACE}/ ${DEPLOY_SERVER}:~/"
+                        
+                        // Execute commands on the deployment server
                         ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} down'"
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && ls -al'"
                         ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} up -d'"
                     }
                 }
@@ -45,7 +46,7 @@ pipeline {
     }
 
     post {
-        always {
+    always {
             cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
                     disableDeferredWipeout: true,
