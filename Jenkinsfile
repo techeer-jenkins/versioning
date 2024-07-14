@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     sh "docker --version"
-                    sh "docker-compose --version"
+                    sh "docker compose --version"
                 }
             }
         }
@@ -35,9 +35,9 @@ pipeline {
                     sshagent(['deploy-server-access']) {
                         ssh "scp -o StrictHostKeyChecking=no ${DOCKER_COMPOSE_FILE} ${DEPLOY_SERVER}:~/"
                         ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/ && git clone https://github.com/techeer-jenkins/versioning.git'"
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker-compose -f ${DOCKER_COMPOSE_FILE} down'"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} down'"
                         ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && ls -al'"
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'"
+                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} up -d'"
                     }
                 }
             }
