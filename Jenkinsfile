@@ -33,12 +33,14 @@ pipeline {
             steps {
                 script {
                     sshagent(['deploy-server-access']) {
-                        // Copy the entire cloned repository to the deployment server
+                        sh """
                         ssh "scp -r -o StrictHostKeyChecking=no ${WORKSPACE}/ ${DEPLOY_SERVER}:~/"
-                        
-                        // Execute commands on the deployment server
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} down'"
-                        ssh "ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} 'cd ~/versioning && docker compose -f ${DOCKER_COMPOSE_FILE} up -d'"
+                        ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        cd ~/versioning
+                        ls -al && pwd
+                        docker compose -f ${DOCKER_COMPOSE_FILE} down
+                        docker compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                        """
                     }
                 }
             }
