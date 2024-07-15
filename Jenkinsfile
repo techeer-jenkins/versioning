@@ -35,6 +35,7 @@ pipeline {
                     sshagent(['deploy-server-access']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        rm -rf ~/versioning
                         git clone https://github.com/techeer-jenkins/versioning.git
                         cd ~/versioning
                         git pull origin main
