@@ -1,0 +1,11 @@
+groups:
+  - name: instance-down
+    rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Instance {{ $labels.instance }} is down"
+          description: "인스턴스 {{ $labels.instance }}가 최소 10초 동안 내려가있습니다. Job: {{ $labels.job }}"
