@@ -1,0 +1,15 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'slack-notifications'
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 5m
+
+receivers:
+  - name: 'slack-notifications'
+    slack_configs:
+    - api_url: 'https://hooks.slack.com/services/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'
+      channel: '#monitoring-session'
+      send_resolved: true
