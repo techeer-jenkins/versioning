@@ -1,4 +1,4 @@
-version: '3.8'
+version: '7'
 
 services:
   nginx-example:
@@ -50,6 +50,8 @@ services:
     volumes:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
       - ./alertmanager/tmp:/data/
+    environment:
+      - SLACK_API_URL=${SLACK_API_URL}
     command: --config.file=/etc/alertmanager/alertmanager.yml
     networks:
       - app-network
