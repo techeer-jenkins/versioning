@@ -37,6 +37,8 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus/alert-rules.yml:/etc/prometheus/alert-rules.yml
+    environment:
+      - SLACK_API_URL=${SLACK_API_URL}
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     networks:

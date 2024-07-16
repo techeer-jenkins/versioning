@@ -18,6 +18,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    echo SLACK_API_URL
                     sh "docker --version"
                     sh "docker compose --version"
                 }
@@ -36,6 +37,7 @@ pipeline {
                     sshagent(['deploy-server-access']) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} '
+                        export SLACK_API_URL=${SLACK_API_URL}
                         rm -rf ~/versioning
                         git clone https://github.com/techeer-jenkins/versioning.git
                         cd ~/versioning
