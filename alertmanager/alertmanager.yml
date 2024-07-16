@@ -10,6 +10,6 @@ route:
 receivers:
   - name: 'slack-notifications'
     slack_configs:
-    - api_url: '{{ SLACK_API_URL }}'
+    - api_url: '$SLACK_API_URL'
       channel: '#monitoring-session'
       send_resolved: true
